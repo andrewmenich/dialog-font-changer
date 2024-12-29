@@ -58,6 +58,15 @@ This is my first RuneLite plugin and first Java project, so I welcome any and al
 
 ### Known Issues
 
+- Clipping can occur with some fonts set at certain sizes. 
+- If the "Hide NPC Name" config option is disabled and the dialog text is four lines long, the dialog text can collide with the NPC name depending on the font selected.
+
 ### Contributing
 
+- If any issues are encountered, please open a new issue.
+- Pull requests for new features and bugfixes are welcome. 
+
 ### Roadmap
+
+- Explore adding background color options and/or modifying the dialog widget background hue.
+- Add more font options.
