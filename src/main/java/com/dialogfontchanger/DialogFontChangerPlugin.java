@@ -68,7 +68,7 @@ public class DialogFontChangerPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		this.enabled = true;
-		log.info("Dialog Font Changer plugin started.");
+		log.info("Dialog Font Changer plugin v1.0.0 started.");
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class DialogFontChangerPlugin extends Plugin
 			this.overlayManager.remove(this.activeOverlay);
 		}
 
-		log.info("Dialog Font Changer plugin stopped.");
+		log.info("Dialog Font Changer plugin v1.0.0 stopped.");
 	}
 
 
