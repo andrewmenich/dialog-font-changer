@@ -62,11 +62,11 @@ public interface DialogFontChangerConfig extends Config
 	@ConfigItem(
 			keyName = "hideNPCName",
 			name = "Hide NPC Name",
-			description = "Doing so provides more room for the custom font positioning.",
+			description = "Will only hide the NPC Name if there are 4 lines of text.",
 			position = 5
 	)
 	default boolean hideNPCName()
 	{
-		return false;
+		return true;
 	}
 }
