@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.WidgetClosed;
 import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.widgets.InterfaceID;
 import net.runelite.client.callback.ClientThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import net.runelite.api.Client;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.ComponentID;
-import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -98,19 +98,18 @@ public class DialogFontChangerPlugin extends Plugin
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded event)
 	{
-		if (event.getGroupId() == WidgetID.DIALOG_NPC_GROUP_ID){
+		if (event.getGroupId() == InterfaceID.DIALOG_NPC){
 			clientThread.invokeLater(() -> {
 				if (this.enabled && this.client.getWidget(ComponentID.DIALOG_NPC_TEXT) != null) {
 					this.npcDialogWidget = this.client.getWidget(ComponentID.DIALOG_NPC_TEXT);
 					assert this.npcDialogWidget != null;
 					this.dialogBoxBounds = this.npcDialogWidget.getBounds().toString();
-					log.info("Processing NPC Dialog Overlay");
 					processWidgetOverlay(this.npcDialogId, this.npcOverlay);
 				}
 			});
 		}
 
-		if (event.getGroupId() == WidgetID.DIALOG_PLAYER_GROUP_ID && config.playerDialog()){
+		if (event.getGroupId() == InterfaceID.DIALOG_PLAYER && config.playerDialog()){
 			clientThread.invokeLater(() -> {
 				if (this.enabled && this.client.getWidget(ComponentID.DIALOG_PLAYER_TEXT) != null) {
 					this.playerDialogWidget = this.client.getWidget(ComponentID.DIALOG_PLAYER_TEXT);
@@ -126,11 +125,11 @@ public class DialogFontChangerPlugin extends Plugin
 	@Subscribe
 	public void onWidgetClosed(WidgetClosed event)
 	{
-		if(event.getGroupId() == WidgetID.DIALOG_NPC_GROUP_ID){
+		if(event.getGroupId() == InterfaceID.DIALOG_NPC){
 			this.hideWidgetOverlay(this.npcDialogId, this.npcOverlay);
 		}
 
-		if(event.getGroupId() == WidgetID.DIALOG_PLAYER_GROUP_ID){
+		if(event.getGroupId() == InterfaceID.DIALOG_PLAYER){
 			this.hideWidgetOverlay(this.playerDialogId, this.playerOverlay);
 		}
 	}
