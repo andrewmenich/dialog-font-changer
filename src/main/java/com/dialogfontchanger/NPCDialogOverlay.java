@@ -28,8 +28,6 @@ public class NPCDialogOverlay extends Overlay {
         this.client = client;
         this.plugin = plugin;
         this.config = config;
-
-        this.npcDialogName = client.getWidget(ComponentID.DIALOG_NPC_NAME);
     }
 
     @Override
@@ -38,8 +36,6 @@ public class NPCDialogOverlay extends Overlay {
         Widget npcDialog = client.getWidget(ComponentID.DIALOG_NPC_TEXT);
         this.npcDialogName = client.getWidget(ComponentID.DIALOG_NPC_NAME);
         String text = npcDialog.getText();
-//        log.info("hello you are here");
-//        log.info(String.valueOf(npcDialog.getParentId()));
         Font font = plugin.getCustomFont();
         graphics.setFont(font);
         graphics.setColor(Color.BLACK);
@@ -57,8 +53,6 @@ public class NPCDialogOverlay extends Overlay {
         // Draw each line
         int lineHeight = fontMetrics.getHeight();
 
-//        log.info("lineHeight: " + lineHeight);
-
         int defaultY = textLocation.y;
 
         if(this.npcDialogName != null){
@@ -66,7 +60,6 @@ public class NPCDialogOverlay extends Overlay {
             int nameHeight = this.npcDialogName.getHeight();
             int nameLineHeight = this.npcDialogName.getLineHeight();
         }
-
 
         // Starting y-coordinate
         int y = textLocation.y + ((textLocation.height / 2) + (lineHeight / 2) - ((lines.length - 1) * lineHeight ));
@@ -94,9 +87,6 @@ public class NPCDialogOverlay extends Overlay {
             y += lineHeight;
         }
 
-        //        graphics.drawString(text, textX, textY);
         return null;
     }
-
-
 }

@@ -4,12 +4,17 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.events.ClientTick;
+import net.runelite.api.events.WidgetClosed;
+import net.runelite.api.events.WidgetLoaded;
+import net.runelite.client.callback.ClientThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.runelite.api.Client;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.ComponentID;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
@@ -47,6 +52,9 @@ public class DialogFontChangerPlugin extends Plugin
 
 	@Inject
 	private OverlayManager overlayManager;
+
+	@Inject
+	private ClientThread clientThread;
 
 	private Font customFont;
 
@@ -87,33 +95,43 @@ public class DialogFontChangerPlugin extends Plugin
 		log.info("Dialog Font Changer plugin v1.0.0 stopped.");
 	}
 
+	@Subscribe
+	public void onWidgetLoaded(WidgetLoaded event)
+	{
+		if (event.getGroupId() == WidgetID.DIALOG_NPC_GROUP_ID){
+			clientThread.invokeLater(() -> {
+				if (this.enabled && this.client.getWidget(ComponentID.DIALOG_NPC_TEXT) != null) {
+					this.npcDialogWidget = this.client.getWidget(ComponentID.DIALOG_NPC_TEXT);
+					assert this.npcDialogWidget != null;
+					this.dialogBoxBounds = this.npcDialogWidget.getBounds().toString();
+					log.info("Processing NPC Dialog Overlay");
+					processWidgetOverlay(this.npcDialogId, this.npcOverlay);
+				}
+			});
+		}
+
+		if (event.getGroupId() == WidgetID.DIALOG_PLAYER_GROUP_ID && config.playerDialog()){
+			clientThread.invokeLater(() -> {
+				if (this.enabled && this.client.getWidget(ComponentID.DIALOG_PLAYER_TEXT) != null) {
+					this.playerDialogWidget = this.client.getWidget(ComponentID.DIALOG_PLAYER_TEXT);
+
+					if (config.playerDialog()) {
+						processWidgetOverlay(playerDialogId, playerOverlay);
+					}
+				}
+			});
+		}
+	}
 
 	@Subscribe
-	public void onGameTick(GameTick gameTick)
+	public void onWidgetClosed(WidgetClosed event)
 	{
-		if(this.enabled && this.client.getWidget(ComponentID.DIALOG_NPC_TEXT) != null){
-			this.npcDialogWidget = this.client.getWidget(ComponentID.DIALOG_NPC_TEXT);
-            assert this.npcDialogWidget != null;
-            this.dialogBoxBounds = this.npcDialogWidget.getBounds().toString();
-			processWidgetOverlay(npcDialogId, npcOverlay);
+		if(event.getGroupId() == WidgetID.DIALOG_NPC_GROUP_ID){
+			this.hideWidgetOverlay(this.npcDialogId, this.npcOverlay);
 		}
 
-		if(this.enabled && this.client.getWidget(ComponentID.DIALOG_PLAYER_TEXT) != null){
-			this.playerDialogWidget = this.client.getWidget(ComponentID.DIALOG_PLAYER_TEXT);
-
-			if(config.playerDialog()){
-				processWidgetOverlay(playerDialogId, playerOverlay);
-			}
-		}
-
-		if(this.enabled && !Objects.equals(this.npcDialogWidget.getBounds().toString(), this.dialogBoxBounds)){
-			this.hideWidgetOverlay(npcDialogId, npcOverlay);
-			this.processWidgetOverlay(npcDialogId, npcOverlay);
-
-			if(config.playerDialog()){
-				this.hideWidgetOverlay(playerDialogId, playerOverlay);
-				this.processWidgetOverlay(playerDialogId, playerOverlay);
-			}
+		if(event.getGroupId() == WidgetID.DIALOG_PLAYER_GROUP_ID){
+			this.hideWidgetOverlay(this.playerDialogId, this.playerOverlay);
 		}
 	}
 
