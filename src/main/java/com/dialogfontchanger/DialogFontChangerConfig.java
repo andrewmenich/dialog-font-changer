@@ -35,10 +35,24 @@ public interface DialogFontChangerConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "lineHeightMultiplier",
+			name = "Line Height Multiplier",
+			description = "Adjust the line height for dialog text (default: 1.0)",
+			position = 3
+	)
+	@Range(
+			min = 0,
+			max = 200
+	)
+	default int lineHeightMultiplier() {
+		return 100;
+	}
+
+	@ConfigItem(
 		keyName = "playerDialog",
 		name = "Modify Player Dialog",
 		description = "Uses selected font for player dialog.",
-		position = 3
+		position = 4
 	)
 	default boolean playerDialog()
 	{
@@ -49,7 +63,7 @@ public interface DialogFontChangerConfig extends Config
 			keyName = "hideNPCName",
 			name = "Hide NPC Name",
 			description = "Doing so provides more room for the custom font positioning.",
-			position = 4
+			position = 5
 	)
 	default boolean hideNPCName()
 	{

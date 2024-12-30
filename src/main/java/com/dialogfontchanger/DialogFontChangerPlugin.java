@@ -142,6 +142,12 @@ public class DialogFontChangerPlugin extends Plugin
 		return fontManager.findFont(configFont);
 	}
 
+	public float getLineHeightMultiplier() {
+		int multiplier = config.lineHeightMultiplier();
+
+		return multiplier / 100f;
+	}
+
 	private void processWidgetOverlay(int dialogId, Overlay overlay)
 	{
 		Widget dialog = this.client.getWidget(dialogId);
